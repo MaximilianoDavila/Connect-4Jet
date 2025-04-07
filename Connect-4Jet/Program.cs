@@ -1,8 +1,5 @@
-﻿namespace Connect_4Jet;
-using System;
-using System.Text;
-using System.Threading; // For pausing the game (Thread.Sleep)
-using System.Collections.Generic; // For the AI's list of choices
+﻿using System;
+
 
 // This class holds our entire Connect Four game
 class Program
@@ -238,5 +235,164 @@ class Program
          Thread.Sleep(1000); // Pause after AI move
     }
 
-    
+    /// <summary>
+    /// AI Logic: Tries to find a winning move, then block player's win, then picks randomly.
+    /// </summary>
+    static int ChooseAIColumn()
+    {
+        // 1. Check if AI can win
+        for (int c = 0; c < Columns; c++)
+        {
+            if (CanPlace(c))
+            {
+                int r = FindLowestRow(c);
+                board[c][r] = aiChip; // Try placing AI chip
+                if (CheckWin(aiChip))
+                {
+                    board[c][r] = Empty; // Undo test move
+                    return c; // Found winning move
+                }
+                board[c][r] = Empty; // Undo test move
+            }
+        }
+
+        // 2. Check if Player can win next turn and block
+        for (int c = 0; c < Columns; c++)
+        {
+            if (CanPlace(c))
+            {
+                int r = FindLowestRow(c);
+                board[c][r] = playerChip; // Try placing Player chip
+                if (CheckWin(playerChip))
+                {
+                    board[c][r] = Empty; // Undo test move
+                    return c; // Found blocking move
+                }
+                board[c][r] = Empty; // Undo test move
+            }
+        }
+
+        // 3. Otherwise, pick a random valid column (prefer center)
+        List<int> preferred = new List<int> { 3, 4, 2, 5, 1, 6, 0 }; // Center-out
+        foreach (int c in preferred)
+        {
+             if (CanPlace(c)) return c;
+        }
+
+        // Fallback (shouldn't be needed if board isn't full)
+        for (int c = 0; c < Columns; c++)
+        {
+            if (CanPlace(c)) return c;
+        }
+
+        return -1; // No valid move found
+    }
+
+    /// <summary>
+    /// Finds the lowest available row index in a column. Returns -1 if full.
+    /// </summary>
+    static int FindLowestRow(int column)
+    {
+        for (int r = 0; r < Rows; r++)
+        {
+            if (board[column][r] == Empty)
+            {
+                return r; // Return the first empty row from bottom
+            }
+        }
+        return -1; // Column is full
+    }
+
+    /// <summary>
+    /// Checks if a chip can be placed in the given column.
+    /// </summary>
+    static bool CanPlace(int column)
+    {
+        // Is the column index valid AND is the top slot empty?
+        return column >= 0 && column < Columns && board[column][Rows - 1] == Empty;
+    }
+
+    /// <summary>
+    /// Tries to place a chip in the lowest empty slot of a column.
+    /// Returns true if successful, false if column is full.
+    /// </summary>
+    static bool TryDropChip(int column, char chip)
+    {
+        int row = FindLowestRow(column);
+        if (row != -1) // If a valid row was found
+        {
+            board[column][row] = chip; // Place the chip
+            return true;
+        }
+        return false; // Column was full
+    }
+
+    /// <summary>
+    /// Checks if the specified chip has won (4 in a row anywhere).
+    /// </summary>
+    static bool CheckWin(char chip)
+    {
+        // Check horizontal (--)
+        for (int r = 0; r < Rows; r++)
+        {
+            for (int c = 0; c <= Columns - 4; c++)
+            {
+                if (board[c][r] == chip && board[c + 1][r] == chip && board[c + 2][r] == chip && board[c + 3][r] == chip) return true;
+            }
+        }
+
+        // Check vertical (|)
+        for (int c = 0; c < Columns; c++)
+        {
+            for (int r = 0; r <= Rows - 4; r++)
+            {
+                if (board[c][r] == chip && board[c][r + 1] == chip && board[c][r + 2] == chip && board[c][r + 3] == chip) return true;
+            }
+        }
+
+        // Check diagonal (/)
+        for (int c = 0; c <= Columns - 4; c++)
+        {
+            for (int r = 0; r <= Rows - 4; r++)
+            {
+                if (board[c][r] == chip && board[c + 1][r + 1] == chip && board[c + 2][r + 2] == chip && board[c + 3][r + 3] == chip) return true;
+            }
+        }
+
+        // Check diagonal (\)
+        for (int c = 0; c <= Columns - 4; c++)
+        {
+            for (int r = 3; r < Rows; r++) // Start from row 3 checking down-left
+            {
+                if (board[c][r] == chip && board[c + 1][r - 1] == chip && board[c + 2][r - 2] == chip && board[c + 3][r - 3] == chip) return true;
+            }
+        }
+
+        return false; // No win found
+    }
+
+    /// <summary>
+    /// Checks if the board has any empty slots left.
+    /// </summary>
+    static bool IsBoardFull()
+    {
+        // Check the top row of all columns. If any are empty, board is not full.
+        for (int c = 0; c < Columns; c++)
+        {
+            if (board[c][Rows - 1] == Empty)
+            {
+                return false; // Found an empty slot
+            }
+        }
+        return true; // No empty slots in the top row means board is full
+    }
+
+    /// <summary>
+    /// Switches the current player and the turn flag.
+    /// </summary>
+    static void SwitchPlayer()
+    {
+        isPlayerTurn = !isPlayerTurn; // Flip the boolean (true becomes false, false becomes true)
+        currentPlayerChip = isPlayerTurn ? playerChip : aiChip; // Set chip based on new turn owner
+    }
 }
