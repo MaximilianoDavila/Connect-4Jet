@@ -1,5 +1,5 @@
 ﻿using System;
-
+namespace Connect_4Jet;
 
 // This class holds our entire Connect Four game
 =======
