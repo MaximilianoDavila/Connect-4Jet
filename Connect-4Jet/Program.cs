@@ -27,7 +27,7 @@ class Program
     // --- Main Program Entry Point ---
     static void Main(string[] args)
     {
-        Console.OutputEncoding = Encoding.UTF8; // Helps display board characters correctly
+        Console.OutputEncoding = System.Text.Encoding.UTF8; // Helps display board characters correctly
         Console.WriteLine(">> Welcome to Connect Four! <<");
 
         ChoosePlayerChip(); // Let the player pick X or O
