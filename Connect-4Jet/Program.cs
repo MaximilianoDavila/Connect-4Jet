@@ -2,8 +2,6 @@
 namespace Connect_4Jet;
 
 // This class holds our entire Connect Four game
-=======
-//Win Conditions done- George
 class Program
 {
     // --- Game Settings ---
@@ -332,57 +330,16 @@ class Program
     /// <summary>
     /// Checks if the specified chip has won (4 in a row anywhere).
     /// </summary>
-    /// <returns> TODO: our documentation here </returns>
-    static bool CheckForWin()
+    static bool CheckWin(char chip)
     {
-        // Go through board
-        for (int x = 0; x < _SIZEX; x++)
+        // Check horizontal (--)
+        for (int r = 0; r < Rows; r++)
         {
-            for (int y = 0; y < _SIZEY; y++)
+            for (int c = 0; c <= Columns - 4; c++)
             {
-                char chip = _board[x][y];
-                
-                //If board is empty continue with next
-                if (chip == _EMPTY)
-                    continue;
-                
-                //if location isnt empty, then checks surrounding tiles
-                
-                // Checks horizontally
-                if (x + 3 < _SIZEX &&
-                    chip == _board[x + 1][y] &&
-                    chip == _board[x + 2][y] &&
-                    chip == _board[x + 3][y])
-                    return true;
-
-                // Checks vertically 
-                if (y + 3 < _SIZEY &&
-                    chip == _board[x][y + 1] &&
-                    chip == _board[x][y + 2] &&
-                    chip == _board[x][y + 3])
-                    return true;
-
-                // Check diagonal up to right
-                if (x + 3 < _SIZEX && y + 3 < _SIZEY &&
-                    chip == _board[x + 1][y + 1] &&
-                    chip == _board[x + 2][y + 2] &&
-                    chip == _board[x + 3][y + 3])
-                    return true;
-
-                // Check diagonal down to right
-                if (x + 3 < _SIZEX && y - 3 >= 0 &&
-                    chip == _board[x + 1][y - 1] &&
-                    chip == _board[x + 2][y - 2] &&
-                    chip == _board[x + 3][y - 3])
-                    return true;
+                if (board[c][r] == chip && board[c + 1][r] == chip && board[c + 2][r] == chip && board[c + 3][r] == chip) return true;
             }
         }
-
-        return false;
-    }
-
-    
-    static void ChangePlayer() {
 
         // Check vertical (|)
         for (int c = 0; c < Columns; c++)
@@ -402,29 +359,16 @@ class Program
             }
         }
 
-
-        return false; // No win found
-=======
-    /// <summary>
-    /// TODO: our documentation here
-    /// </summary>
-    /// <param name="row">TODO: our documentation here</param>
-    /// <param name="col">TODO: our documentation here</param>
-    /// <returns>TODO: our documentation here</returns>
-    static bool PlaceMarkOnBoard(int row, int col) {
-        //TODO YOUR CODE HERE
-        //Note: This code could read from the global variable 'currentPlayerMark',
-        //or value of 'currentPlayerMark' could be passed as a method parameter/argument.
-        //It is the programmer's choice.
-        
-        //Checks for win after placing MarkOnBoard
-        if (CheckForWin())
+        // Check diagonal (\)
+        for (int c = 0; c <= Columns - 4; c++)
         {
-            _gameEnded = true;
-            PrintLn($"Player {_currentPlayerChip} wins!");
+            for (int r = 3; r < Rows; r++) // Start from row 3 checking down-left
+            {
+                if (board[c][r] == chip && board[c + 1][r - 1] == chip && board[c + 2][r - 2] == chip && board[c + 3][r - 3] == chip) return true;
+            }
         }
 
-        return false;
+        return false; // No win found
     }
 
     /// <summary>
