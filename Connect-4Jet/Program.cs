@@ -18,7 +18,7 @@
  * Template provided by prof. Reynaldo Belfort, S.J.
  * */
 
-
+//Win Conditions done- George
 class Program
 {
     //Define values that never change using 'const'
@@ -196,9 +196,54 @@ class Program
     /// TODO: our documentation here
     /// </summary>
     /// <returns> TODO: our documentation here </returns>
-    static bool CheckForWin() {
+    static bool CheckForWin()
+    {
+        // Go through board
+        for (int x = 0; x < _SIZEX; x++)
+        {
+            for (int y = 0; y < _SIZEY; y++)
+            {
+                char chip = _board[x][y];
+                
+                //If board is empty continue with next
+                if (chip == _EMPTY)
+                    continue;
+                
+                //if location isnt empty, then checks surrounding tiles
+                
+                // Checks horizontally
+                if (x + 3 < _SIZEX &&
+                    chip == _board[x + 1][y] &&
+                    chip == _board[x + 2][y] &&
+                    chip == _board[x + 3][y])
+                    return true;
+
+                // Checks vertically 
+                if (y + 3 < _SIZEY &&
+                    chip == _board[x][y + 1] &&
+                    chip == _board[x][y + 2] &&
+                    chip == _board[x][y + 3])
+                    return true;
+
+                // Check diagonal up to right
+                if (x + 3 < _SIZEX && y + 3 < _SIZEY &&
+                    chip == _board[x + 1][y + 1] &&
+                    chip == _board[x + 2][y + 2] &&
+                    chip == _board[x + 3][y + 3])
+                    return true;
+
+                // Check diagonal down to right
+                if (x + 3 < _SIZEX && y - 3 >= 0 &&
+                    chip == _board[x + 1][y - 1] &&
+                    chip == _board[x + 2][y - 2] &&
+                    chip == _board[x + 3][y - 3])
+                    return true;
+            }
+        }
+
         return false;
     }
+
     
     static void ChangePlayer() {
 
@@ -217,6 +262,13 @@ class Program
         //Note: This code could read from the global variable 'currentPlayerMark',
         //or value of 'currentPlayerMark' could be passed as a method parameter/argument.
         //It is the programmer's choice.
+        
+        //Checks for win after placing MarkOnBoard
+        if (CheckForWin())
+        {
+            _gameEnded = true;
+            PrintLn($"Player {_currentPlayerChip} wins!");
+        }
 
         return false;
     }
