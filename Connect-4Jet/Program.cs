@@ -1,4 +1,4 @@
-﻿// Made by Daniel E. Cintron, Maximiliano Davila, George Lopez
+﻿// Made by Jet Brainers that are Daniel E. Cintron, Maximiliano Davila, George Lopez to create connect - 4Jet
 using System.Text;       
  
 
@@ -53,7 +53,10 @@ class Program
         ConsoleColor originalFg = Console.ForegroundColor;
 
         Console.OutputEncoding = Encoding.UTF8;
-
+        
+        //Add the splash screen animation here before the game starts
+        ShowSplashScreen();
+        
         Console.WriteLine(">> Welcome to Connect Four! <<");
 
         ChoosePlayerChip();
@@ -446,4 +449,201 @@ class Program
         isPlayerTurn = !isPlayerTurn;
         currentPlayerChipChar = isPlayerTurn ? playerChipChar : aiChipChar;
     }
+    
+     /// <summary>
+        /// Displays an animated splash screen with a simulated Connect 4 game where red wins.
+        /// </summary>
+        static void ShowSplashScreen()
+        {
+            Console.Clear();
+
+            //Set board dimensions: 6 rows x 7 columns
+            int rows = 6;
+            int cols = 7;
+
+            //Create the board
+            string[,] board = new string[rows, cols];
+
+            //Initialize board with empty spaces
+            for (int r = 0; r < rows; r++)
+                for (int c = 0; c < cols; c++)
+                    board[r, c] = " ";
+
+            //Define the move sequence leading to red’s diagonal win
+            (int col, string color)[] moves = new (int, string)[]
+            {
+                (0, "R"), (1, "Y"),
+                (1, "R"), (2, "Y"),
+                (2, "R"), (3, "Y"),
+                (2, "R"), (3, "Y"),
+                (3, "R"), (5, "Y"),
+                (3, "R")//Final move gives red a diagonal win
+            };
+
+            //Play the moves with falling animation
+            foreach (var move in moves)
+            {
+                AnimateChipDrop(board, move.col, move.color); //Drop chip with animation
+                Thread.Sleep(50); //Pause between moves
+            }
+            
+            //Wait before showing logo
+            Thread.Sleep(1000);
+
+            //Show animated Connect 4Jet splash
+            ShowAsciiSplash();
+        }
+
+        /// <summary>
+        /// Animates a chip dropping visually down the column one cell at a time.
+        /// </summary>
+        static void AnimateChipDrop(string[,] board, int column, string chip)
+        {
+            //Find the target row where the chip will land
+            int targetRow = -1;
+            for (int r = board.GetLength(0) - 1; r >= 0; r--)
+            {
+                if (board[r, column] == " ")
+                {
+                    targetRow = r;
+                    break;
+                }
+            }
+
+            //Return if column is full
+            if (targetRow == -1) return;
+
+            //Drop chip row by row to simulate falling
+            for (int r = 0; r <= targetRow; r++)
+            {
+                if (r > 0) board[r - 1, column] = " "; //Clear previous chip
+                board[r, column] = chip; //Set current position
+                DrawBoard(board); //Redraw board
+                Thread.Sleep(50); //Pause to animate fall
+            }
+        }
+
+        /// <summary>
+        /// Draws the Connect 4 board and optional message (e.g. Red Wins).
+        /// </summary>
+        static void DrawBoard(string[,] board, string message = null)
+        {
+            Console.Clear();
+
+            int rows = board.GetLength(0);
+            int cols = board.GetLength(1);
+
+            //Display optional message centered above the board
+            if (!string.IsNullOrEmpty(message))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"        {message}\n");
+                Console.ResetColor();
+            }
+
+            //Draw from top row to bottom row
+            for (int r = 0; r < rows; r++)
+            {
+                Console.Write("|");
+                for (int c = 0; c < cols; c++)
+                {
+                    string chip = board[r, c];
+
+                    //Set color for chips
+                    if (chip == "R") Console.ForegroundColor = ConsoleColor.Red;
+                    else if (chip == "Y") Console.ForegroundColor = ConsoleColor.Yellow;
+                    else Console.ResetColor();
+
+                    Console.Write($" {chip} "); //Draw chip
+                    Console.ResetColor();
+                    Console.Write("|");
+                }
+                Console.WriteLine(); //Move to next line
+            }
+
+            //Draw board bottom border
+            Console.WriteLine(" -----------------------------");
+        }
+
+        /// <summary>
+        /// Displays the Connect 4Jet splash with animated color changes.
+        /// </summary>
+        static void ShowAsciiSplash()
+        {
+            Console.Clear();
+
+            //Define splash ASCII lines
+            string[] splashLines = new string[]
+            {
+                "                                                           >=>                          >=>             >=>   ",
+                "                                                           >=>              >=>         >=>             >=>   ",
+                "   >==>    >=>     >==>>==>  >==>>==>    >==>       >==> >=>>==>           >>=>         >=>   >==>    >=>>==> ",
+                " >=>     >=>  >=>   >=>  >=>  >=>  >=> >>   >=>   >=>      >=>            > >=>         >=> >>   >=>    >=>   ",
+                ">=>     >=>    >=>  >=>  >=>  >=>  >=> >>===>>=> >=>       >=>          >=> >=>         >=> >>===>>=>   >=>   ",
+                " >=>     >=>  >=>   >=>  >=>  >=>  >=> >>         >=>      >=>         >===>>=>>=> >>   >=> >>          >=>   ",
+                "   >==>    >=>     >==>  >=> >==>  >=>  >====>      >==>    >=>             >=>     >===>    >====>      >=>  "
+            };
+
+            string pressEnterText = "PRESS ENTER TO START THE GAME...";
+            int pressEnterY = splashLines.Length + 2;
+
+            ConsoleColor[] colors = new ConsoleColor[]
+            {
+                ConsoleColor.Red,
+                ConsoleColor.Yellow,
+                ConsoleColor.Cyan,
+                ConsoleColor.Green,
+                ConsoleColor.Magenta
+            };
+
+            int colorIndex = 0;
+
+            // Make input detection non-blocking
+            Console.TreatControlCAsInput = true;
+            Console.CursorVisible = false;
+
+            DateTime lastUpdate = DateTime.Now;
+
+            // Loop until Enter is pressed
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey();
+                    if (key.Key == ConsoleKey.Enter)
+                        break; // Exit animation on Enter
+                }
+
+                // Only update every 200ms
+                if ((DateTime.Now - lastUpdate).TotalMilliseconds >= 200)
+                {
+                    Console.Clear();
+
+                    Console.ForegroundColor = colors[colorIndex];
+                    foreach (string line in splashLines)
+                    {
+                        Console.WriteLine(line);
+                    }
+
+                    Console.ResetColor();
+
+                    // Show "Press ENTER" message in white
+                    Console.SetCursorPosition((Console.WindowWidth - pressEnterText.Length) / 2, pressEnterY);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(pressEnterText);
+                    Console.ResetColor();
+
+                    
+                    // Cycle to the next color
+                    colorIndex = (colorIndex + 1) % colors.Length;
+
+                    lastUpdate = DateTime.Now;
+                }
+
+                Thread.Sleep(10); // Small delay to reduce CPU usage
+            }
+
+            Console.Clear();
+            Console.CursorVisible = true;
+        }
 }
