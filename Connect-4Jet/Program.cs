@@ -166,7 +166,7 @@ class Program
         Console.Write($"You are "); WriteWithColor(playerChipEmoji, playerChipColor);
         Console.Write(". AI is "); WriteWithColor(aiChipEmoji, aiChipColor);
         Console.WriteLine(".");
-        Console.WriteLine("-----------------------------");
+        Console.WriteLine("---------------------------------");
     }
 
 
@@ -219,7 +219,7 @@ class Program
         Console.Write($"Score: Player "); WriteWithColor(playerChipEmoji, playerChipColor);
         Console.Write($"={playerScore} | AI "); WriteWithColor(aiChipEmoji, aiChipColor);
         Console.WriteLine($"={aiScore}");
-        Console.WriteLine("-----------------------------");
+        Console.WriteLine("--------------------------------");
 
         // Display Cursor ('V')
         Console.Write(" ");
@@ -228,12 +228,12 @@ class Program
 
         // Display Column Numbers
         Console.Write(" ");
-        for (int c = 0; c < Columns; c++) { Console.Write($" {c + 1} "); }
+        for (int c = 0; c < Columns; c++) { Console.Write($"  {c + 1} "); }
         Console.WriteLine();
-
+        
         // Display Top Border of Grid
         WriteWithColor("+", DefaultForeColor, GridFrameColor);
-        for (int c = 0; c < Columns; c++) { WriteWithColor("---", DefaultForeColor, GridFrameColor); } // Column content width is 3 (" E ")
+        for (int c = 0; c < Columns; c++) { WriteWithColor("----", DefaultForeColor, GridFrameColor); } // Column content width is 3 (" E ")
         WriteWithColor("+", DefaultForeColor, GridFrameColor);
         Console.WriteLine();
 
@@ -267,7 +267,7 @@ class Program
             // Draw Horizontal Row Separator using '+' and '---'
             // (This remains the same as the cell content width is still 3)
             WriteWithColor("+", DefaultForeColor, GridFrameColor);
-            for (int c = 0; c < Columns; c++) { WriteWithColor("---", DefaultForeColor, GridFrameColor); }
+            for (int c = 0; c < Columns; c++) { WriteWithColor("----", DefaultForeColor, GridFrameColor); }
             WriteWithColor("+", DefaultForeColor, GridFrameColor);
             Console.WriteLine();
         }
