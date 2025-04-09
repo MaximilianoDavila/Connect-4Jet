@@ -223,7 +223,7 @@ class Program
 
         // Display Cursor ('V')
         Console.Write(" ");
-        for (int c = 0; c < Columns; c++) { WriteWithColor(c == cursorPosition ? " V " : "   ", ConsoleColor.Green); }
+        for (int c = 0; c < Columns; c++) { WriteWithColor(c == cursorPosition ? "  V   " : "    ", ConsoleColor.Green); }
         Console.WriteLine();
 
         // Display Column Numbers
