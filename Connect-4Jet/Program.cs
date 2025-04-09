@@ -1,8 +1,6 @@
 ﻿// Made by Daniel E. Cintron, Maximiliano Davila, George Lopez
-using System;
 using System.Text;       
-using System.Threading;    
-using System.Collections.Generic; 
+ 
 
 // This class holds our entire Connect Four game
 class Program
