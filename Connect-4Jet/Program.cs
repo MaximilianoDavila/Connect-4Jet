@@ -431,19 +431,19 @@ class Program
                 (1, "R"), (2, "Y"),
                 (2, "R"), (3, "Y"),
                 (2, "R"), (3, "Y"),
-                (3, "R"), (4, "Y"),
-                (3, "R") //Final move gives red a diagonal win
+                (3, "R"), (5, "Y"),
+                (3, "R")//Final move gives red a diagonal win
             };
 
             //Play the moves with falling animation
             foreach (var move in moves)
             {
                 AnimateChipDrop(board, move.col, move.color); //Drop chip with animation
-                Thread.Sleep(200); //Pause between moves
+                Thread.Sleep(50); //Pause between moves
             }
             
             //Wait before showing logo
-            Thread.Sleep(1500);
+            Thread.Sleep(1000);
 
             //Show animated Connect 4Jet splash
             ShowAsciiSplash();
@@ -474,7 +474,7 @@ class Program
                 if (r > 0) board[r - 1, column] = " "; //Clear previous chip
                 board[r, column] = chip; //Set current position
                 DrawBoard(board); //Redraw board
-                Thread.Sleep(80); //Pause to animate fall
+                Thread.Sleep(50); //Pause to animate fall
             }
         }
 
@@ -539,35 +539,66 @@ class Program
                 "   >==>    >=>     >==>  >=> >==>  >=>  >====>      >==>    >=>             >=>     >===>    >====>      >=>  "
             };
 
-            //Cycle through rainbow colors
+            string pressEnterText = "PRESS ENTER TO START THE GAME...";
+            int pressEnterY = splashLines.Length + 2;
+
             ConsoleColor[] colors = new ConsoleColor[]
             {
-                ConsoleColor.Red, ConsoleColor.Yellow, ConsoleColor.Green,
-                ConsoleColor.Cyan, ConsoleColor.Blue, ConsoleColor.Magenta, ConsoleColor.White
+                ConsoleColor.Red,
+                ConsoleColor.Yellow,
+                ConsoleColor.Cyan,
+                ConsoleColor.Green,
+                ConsoleColor.Magenta
             };
 
-            //Loop through several animation passes
-            for (int frame = 0; frame < 5; frame++)
+            int colorIndex = 0;
+
+            // Make input detection non-blocking
+            Console.TreatControlCAsInput = true;
+            Console.CursorVisible = false;
+
+            DateTime lastUpdate = DateTime.Now;
+
+            // Loop until Enter is pressed
+            while (true)
             {
-                Console.Clear();
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey();
+                    if (key.Key == ConsoleKey.Enter)
+                        break; // Exit animation on Enter
+                }
 
-                //Pick color for this frame
-                ConsoleColor color = colors[frame % colors.Length];
-                Console.ForegroundColor = color;
+                // Only update every 200ms
+                if ((DateTime.Now - lastUpdate).TotalMilliseconds >= 200)
+                {
+                    Console.Clear();
 
-                //Print splash lines
-                foreach (var line in splashLines)
-                    Console.WriteLine(line);
+                    Console.ForegroundColor = colors[colorIndex];
+                    foreach (string line in splashLines)
+                    {
+                        Console.WriteLine(line);
+                    }
 
-                Console.ResetColor();
-                Thread.Sleep(250); //Pause between frames
+                    Console.ResetColor();
+
+                    // Show "Press ENTER" message in white
+                    Console.SetCursorPosition((Console.WindowWidth - pressEnterText.Length) / 2, pressEnterY);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(pressEnterText);
+                    Console.ResetColor();
+
+                    
+                    // Cycle to the next color
+                    colorIndex = (colorIndex + 1) % colors.Length;
+
+                    lastUpdate = DateTime.Now;
+                }
+
+                Thread.Sleep(10); // Small delay to reduce CPU usage
             }
 
-            //Display prompt to continue
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("\n\n                        Press ENTER to start the game...");
-            Console.ResetColor();
-            Console.ReadLine(); //Wait for user to press ENTER
-            Console.Clear(); //Clear screen before transitioning to game
+            Console.Clear();
+            Console.CursorVisible = true;
         }
 }
