@@ -512,14 +512,38 @@ class Program
     /// Checks for 4-in-a-row for the given internal chip char.
     /// </summary>
     static bool CheckWin(char chipChar) {
-        // Check horizontal (--)
-        for (int r = 0; r < Rows; r++) { for (int c = 0; c <= Columns - 4; c++) { if (board[c][r] == chipChar && board[c + 1][r] == chipChar && board[c + 2][r] == chipChar && board[c + 3][r] == chipChar) return true; } }
-        // Check vertical (|)
-        for (int c = 0; c < Columns; c++) { for (int r = 0; r <= Rows - 4; r++) { if (board[c][r] == chipChar && board[c][r + 1] == chipChar && board[c][r + 2] == chipChar && board[c][r + 3] == chipChar) return true; } }
-        // Check diagonal (/) up-right
-        for (int c = 0; c <= Columns - 4; c++) { for (int r = 0; r <= Rows - 4; r++) { if (board[c][r] == chipChar && board[c + 1][r + 1] == chipChar && board[c + 2][r + 2] == chipChar && board[c + 3][r + 3] == chipChar) return true; } }
-        // Check diagonal (\) down-right
-        for (int c = 0; c <= Columns - 4; c++) { for (int r = 3; r < Rows; r++) { if (board[c][r] == chipChar && board[c + 1][r - 1] == chipChar && board[c + 2][r - 2] == chipChar && board[c + 3][r - 3] == chipChar) return true; } }
+        // Check horizontal (left to right)
+        for (int r = 0; r < Rows; r++) {
+            for (int c = 0; c <= Columns - 4; c++) {
+                if (board[c][r] == chipChar && board[c + 1][r] == chipChar && board[c + 2][r] == chipChar && board[c + 3][r] == chipChar)
+                    return true;
+            }
+        }
+
+        // Check vertical (top to bottom)
+        for (int c = 0; c < Columns; c++) {
+            for (int r = 0; r <= Rows - 4; r++) {
+                if (board[c][r] == chipChar && board[c][r + 1] == chipChar && board[c][r + 2] == chipChar && board[c][r + 3] == chipChar)
+                    return true;
+            }
+        }
+
+        // Check diagonal (up-right /)
+        for (int c = 0; c <= Columns - 4; c++) {
+            for (int r = 0; r <= Rows - 4; r++) {
+                if (board[c][r] == chipChar && board[c + 1][r + 1] == chipChar && board[c + 2][r + 2] == chipChar && board[c + 3][r + 3] == chipChar)
+                    return true;
+            }
+        }
+
+        // Check diagonal (down-right \)
+        for (int c = 0; c <= Columns - 4; c++) {
+            for (int r = 3; r < Rows; r++) {
+                if (board[c][r] == chipChar && board[c + 1][r - 1] == chipChar && board[c + 2][r - 2] == chipChar && board[c + 3][r - 3] == chipChar)
+                    return true;
+            }
+        }
+
         return false;
     }
 
@@ -540,6 +564,8 @@ class Program
         isPlayerTurn = !isPlayerTurn;
         currentPlayerChipChar = isPlayerTurn ? playerChipChar : aiChipChar;
     }
+    
+    
 
     /// <summary>
     /// Displays an animated splash screen with a simulated Connect 4 game where red wins.
