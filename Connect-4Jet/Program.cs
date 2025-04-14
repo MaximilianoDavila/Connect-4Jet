@@ -1,4 +1,4 @@
-﻿// Made by Jet Brainers that are Daniel E. Cintron, Maximiliano Davila, George Lopez to create connect - 4Jetusing System;
+// Made by Jet Brainers that are Daniel E. Cintron, Maximiliano Davila, George Lopez to create connect - 4Jetusing System;
 
 // Add necessary using directives back for cleaner code
 using System;
@@ -25,12 +25,13 @@ class Program
     const ConsoleColor Player1Color = ConsoleColor.Yellow;
     const string Player2Emoji = "🔴";
     const ConsoleColor Player2Color = ConsoleColor.Red;
-    const string EmptySlotDisplay = " ";
-    const ConsoleColor GridFrameColor = ConsoleColor.DarkBlue;
-    const ConsoleColor EmptySlotBackColor = ConsoleColor.Black;
-    const ConsoleColor DefaultBackColor = ConsoleColor.Black;
-    const ConsoleColor DefaultForeColor = ConsoleColor.Gray;
 
+    const string EmptySlotDisplay = " "; // What to show for an empty space visually
+    const ConsoleColor GridFrameColor = ConsoleColor.DarkBlue; // Frame color (Darkest standard blue)
+    const ConsoleColor EmptySlotBackColor = ConsoleColor.Black; // Background for empty slots
+    const ConsoleColor DefaultBackColor = ConsoleColor.Black; // Default console background
+    const ConsoleColor DefaultForeColor = ConsoleColor.Gray; // Default console text color
+   
 
     //Player Names
     static string player1Name;
