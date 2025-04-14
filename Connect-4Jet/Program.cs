@@ -1,9 +1,5 @@
 ﻿// Made by Jet Brainers that are Daniel E. Cintron, Maximiliano Davila, George Lopez to create connect - 4Jetusing System;
-
-
-
 using System.Text;       // For Encoding
-
 
 // This class holds our entire Connect Four game
 class Program
@@ -27,7 +23,22 @@ class Program
     const ConsoleColor EmptySlotBackColor = ConsoleColor.Black; // Background for empty slots
     const ConsoleColor DefaultBackColor = ConsoleColor.Black; // Default console background
     const ConsoleColor DefaultForeColor = ConsoleColor.Gray;  // Default console text color
+    
+    
+    //Player Names
+    static string player1Name;
+    static string player2Name;
+    
+    //Scoreboard values
+    static int player1Wins = 0;
+    static int player1Losses = 0;
+    static int player1Draws = 0;
 
+    static int player2Wins = 0;
+    static int player2Losses = 0;
+    static int player2Draws = 0;
+
+    
     // --- Game State ---
     static char[][] board = new char[Columns][]; // Stores internal chars: '_', 'X', 'O'
 
@@ -64,12 +75,14 @@ class Program
         ShowSplashScreen();
 
         Console.WriteLine(">> Welcome to Connect Four! <<");
-
+        //Player names
+        GetPlayerNames();
+        
         // NEW: Choose game mode
         ChooseGameMode();
-
+        
         ChoosePlayerChip();
-
+        
         bool playAgain = true;
         while (playAgain)
         {
@@ -112,12 +125,11 @@ class Program
                         Console.Write($"\n--- ");
                         if (currentPlayerChipChar == playerChipChar) {
                             WriteWithColor(playerChipEmoji, playerChipColor);
-                            Console.Write(" (Player) WINS! ---");
+                            Console.Write($" ({player1Name}) WINS! ---");  // Player 1 wins
                             playerScore++;
                         } else {
                             WriteWithColor(aiChipEmoji, aiChipColor);
-                            // Change win message based on game mode
-                            Console.Write(isPlayerVsPlayer ? " (Player 2) WINS! ---" : " (AI) WINS! ---");
+                            Console.Write(isPlayerVsPlayer ? $" ({player2Name}) WINS! ---" : " (AI) WINS! ---");  // Player 2 or AI wins
                             aiScore++;
                         }
                         Console.WriteLine();
@@ -134,17 +146,57 @@ class Program
                     }
                 }
             } // End turn loop
-
+            
+            //Adds wins,loses and draws to the respective players scores.
+            if (currentPlayerChipChar == playerChipChar)
+            {
+                if (gameEnded)
+                {
+                    player1Wins++;
+                    player2Losses++;
+                }
+            }
+            else if (currentPlayerChipChar == aiChipChar)
+            {
+                if (gameEnded)
+                {
+                    player2Wins++;
+                    player1Losses++;
+                }
+            }
+            else
+            {
+                if (gameEnded)
+                {
+                    player1Draws++;
+                    player2Draws++;
+                }
+            }
+            
+            //Shows scoreboard
+            DisplayScoreboard();
+            
+            
+            //Ask for replay
             Console.Write("\nPlay again? (y/n): ");
             string response = Console.ReadLine();
             playAgain = response?.Trim().ToLower() == "y";
-
+            
+            
         } // End multiple games loop
-
+        
         Console.WriteLine("\nThanks for playing!");
         ResetConsoleColors(originalFg, originalBg);
     }
-
+    
+    //Scoreboard of each players wins, loses and draws
+    static void DisplayScoreboard()
+    {
+        Console.WriteLine("\n--- Scoreboard ---");
+        Console.WriteLine($"{player1Name}: Wins = {player1Wins}, Losses = {player1Losses}, Draws = {player1Draws}");
+        Console.WriteLine($"{player2Name}: Wins = {player2Wins}, Losses = {player2Losses}, Draws = {player2Draws}");
+        Console.WriteLine("------------------");
+    }
 
     /// <summary>
     /// Asks the player to choose the game mode: Player vs AI or Player vs Player.
@@ -359,14 +411,27 @@ class Program
 
         Console.ForegroundColor = originalFg; // Reset colors
         Console.BackgroundColor = originalBg;
-
+        
+        
+        //Adjusted turn to say name
         Console.Write($"Turn: ");
         if (isPlayerTurn) {
-            WriteWithColor(playerChipEmoji, playerChipColor); Console.Write(" (Player)");
-        } else {
-            WriteWithColor(aiChipEmoji, aiChipColor);
-            Console.Write(isPlayerVsPlayer ? " (Player 2)" : " (AI)");
+            WriteWithColor(playerChipEmoji, playerChipColor); 
+            Console.Write($" ({player1Name})");  // Display Player 1's name
         }
+        else
+        {
+            WriteWithColor(aiChipEmoji, aiChipColor);
+            if (isPlayerVsPlayer)
+            {
+                Console.Write($" ({player2Name})"); // Display Player 2's name
+            }
+            else
+            {
+                Console.Write($" (AI)"); // For Player vs AI mode, show AI
+            }
+        }
+
         Console.WriteLine(); // Ensure newline after turn info
 
         Console.CursorVisible = true; // Restore console cursor
@@ -380,10 +445,9 @@ class Program
         // Determine whose chip to use based on whose turn it is (for PvP)
         char chipToDrop = isPlayerTurn ? playerChipChar : aiChipChar;
         // Display correct player number in prompt
-        string playerPrompt = isPlayerVsPlayer ? $"Player {(isPlayerTurn ? 1 : 2)}" : "Player";
+        string playerPrompt = isPlayerVsPlayer ? $"{(isPlayerTurn ? player1Name : player2Name)}" : "Player";
 
-
-        Console.Write($"{playerPrompt} - Move (LEFT/RIGHT), Drop (ENTER), Quit (Q): ");
+        Console.Write($"{playerPrompt} - Move (LEFT/RIGHT), Drop (ENTER), Quit to Menu(Q): ");
         ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
         bool turnActionCompleted = false;
@@ -410,8 +474,10 @@ class Program
                 break;
 
             case ConsoleKey.Q:
-                Console.WriteLine("\nQuitting game.");
-                gameEnded = true;
+                Console.WriteLine("\nReturning to main menu...\n");
+                // Reset game state and return to game mode selection
+                ChooseGameMode();
+                Console.Clear();
                 turnActionCompleted = true;
                 break;
         }
@@ -565,6 +631,16 @@ class Program
         currentPlayerChipChar = isPlayerTurn ? playerChipChar : aiChipChar;
     }
     
+    /// <summary>
+    /// Prompts the players to enter their names at the start of the game.
+    /// </summary>
+    static void GetPlayerNames()
+    {
+        Console.Write("Enter name for Player 1: ");
+        player1Name = Console.ReadLine();
+        Console.Write("Enter name for Player 2: ");
+        player2Name = Console.ReadLine();
+    }
     
 
     /// <summary>
