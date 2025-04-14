@@ -29,6 +29,16 @@ class Program
     static string player1Name;
     static string player2Name;
     
+    //Scoreboard values
+    static int player1Wins = 0;
+    static int player1Losses = 0;
+    static int player1Draws = 0;
+
+    static int player2Wins = 0;
+    static int player2Losses = 0;
+    static int player2Draws = 0;
+
+    
     // --- Game State ---
     static char[][] board = new char[Columns][]; // Stores internal chars: '_', 'X', 'O'
 
@@ -136,17 +146,57 @@ class Program
                     }
                 }
             } // End turn loop
-
+            
+            //Adds wins,loses and draws to the respective players scores.
+            if (currentPlayerChipChar == playerChipChar)
+            {
+                if (gameEnded)
+                {
+                    player1Wins++;
+                    player2Losses++;
+                }
+            }
+            else if (currentPlayerChipChar == aiChipChar)
+            {
+                if (gameEnded)
+                {
+                    player2Wins++;
+                    player1Losses++;
+                }
+            }
+            else
+            {
+                if (gameEnded)
+                {
+                    player1Draws++;
+                    player2Draws++;
+                }
+            }
+            
+            //Shows scoreboard
+            DisplayScoreboard();
+            
+            
+            //Ask for replay
             Console.Write("\nPlay again? (y/n): ");
             string response = Console.ReadLine();
             playAgain = response?.Trim().ToLower() == "y";
-
+            
+            
         } // End multiple games loop
-
+        
         Console.WriteLine("\nThanks for playing!");
         ResetConsoleColors(originalFg, originalBg);
     }
-
+    
+    //Scoreboard of each players wins, loses and draws
+    static void DisplayScoreboard()
+    {
+        Console.WriteLine("\n--- Scoreboard ---");
+        Console.WriteLine($"{player1Name}: Wins = {player1Wins}, Losses = {player1Losses}, Draws = {player1Draws}");
+        Console.WriteLine($"{player2Name}: Wins = {player2Wins}, Losses = {player2Losses}, Draws = {player2Draws}");
+        Console.WriteLine("------------------");
+    }
 
     /// <summary>
     /// Asks the player to choose the game mode: Player vs AI or Player vs Player.
