@@ -1,11 +1,9 @@
 ﻿// Made by Jet Brainers that are Daniel E. Cintron, Maximiliano Davila, George Lopez to create connect - 4Jetusing System;
-// Add necessary using directives back for cleaner code
-using System;
-using System.Text;       // For Encoding
-using System.Threading;    // For Thread.Sleep
-using System.Collections.Generic; // For List
 
-// Note: System.Runtime.InteropServices is not needed for this version
+
+using System.Text;    
+
+
 
 // This class holds our entire Connect Four game
 class Program
