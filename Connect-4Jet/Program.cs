@@ -1028,7 +1028,6 @@ class Program
 
             Thread.Sleep(20); // Small sleep to prevent tight loop from eating CPU
         }
-
         Console.CursorVisible = true; // Restore cursor
         Console.Clear(); // Clear splash screen before starting game
     }
