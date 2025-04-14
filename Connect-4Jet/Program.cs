@@ -205,7 +205,10 @@ class Program
     static void ChooseGameMode()
     {
         Console.WriteLine("\nWelcome!! Here are your choices in this game which are:");
+        
         Console.WriteLine("\n________________________________________________________________");
+        Console.WriteLine("|                        ----- Menu -----                      |");
+        Console.WriteLine("________________________________________________________________");
         Console.WriteLine("|             Number#            |           Options           |");
         Console.WriteLine("|_______________________________________________________________");
         Console.WriteLine("|                1               |       Player vs AI          |");
