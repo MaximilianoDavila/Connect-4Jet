@@ -23,8 +23,7 @@ class Program
     const ConsoleColor EmptySlotBackColor = ConsoleColor.Black; // Background for empty slots
     const ConsoleColor DefaultBackColor = ConsoleColor.Black; // Default console background
     const ConsoleColor DefaultForeColor = ConsoleColor.Gray; // Default console text color
-
-
+    
     //Player Names
     static string player1Name;
     static string player2Name;
