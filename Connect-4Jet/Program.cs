@@ -494,7 +494,7 @@ class Program
                 WriteWithColor(chipEmoji, chipColor, EmptySlotBackColor); // Draw chip on black bg
              } catch { /* ignore */ }
 
-            Thread.Sleep(65); // Pause for animation frame
+            Thread.Sleep(95); // Pause for animation frame
 
             // Erase the chip from the current position IF it's not the final landing spot
             if (r < targetRow)
