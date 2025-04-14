@@ -148,30 +148,40 @@ class Program
             } // End turn loop
             
             //Adds wins,loses and draws to the respective players scores.
-            if (currentPlayerChipChar == playerChipChar)
+            if (isPlayerVsPlayer)
             {
-                if (gameEnded)
+                if (currentPlayerChipChar == playerChipChar)
                 {
                     player1Wins++;
                     player2Losses++;
                 }
-            }
-            else if (currentPlayerChipChar == aiChipChar)
-            {
-                if (gameEnded)
+                else if (currentPlayerChipChar == aiChipChar) // in PvP this is the 2nd player's chip
                 {
                     player2Wins++;
                     player1Losses++;
                 }
-            }
-            else
-            {
-                if (gameEnded)
+                else
                 {
                     player1Draws++;
                     player2Draws++;
                 }
             }
+            else
+            {
+                if (currentPlayerChipChar == playerChipChar)
+                {
+                    player1Wins++;
+                }
+                else if (currentPlayerChipChar == aiChipChar)
+                {
+                    player1Losses++;
+                }
+                else
+                {
+                    player1Draws++;
+                }
+            }
+
             
             //Shows scoreboard
             DisplayScoreboard();
