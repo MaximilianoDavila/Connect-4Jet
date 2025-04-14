@@ -22,13 +22,13 @@ class Program
     const ConsoleColor GridFrameColor = ConsoleColor.DarkBlue; // Frame color (Darkest standard blue)
     const ConsoleColor EmptySlotBackColor = ConsoleColor.Black; // Background for empty slots
     const ConsoleColor DefaultBackColor = ConsoleColor.Black; // Default console background
-    const ConsoleColor DefaultForeColor = ConsoleColor.Gray;  // Default console text color
-    
-    
+    const ConsoleColor DefaultForeColor = ConsoleColor.Gray; // Default console text color
+
+
     //Player Names
     static string player1Name;
     static string player2Name;
-    
+
     //Scoreboard values
     static int player1Wins = 0;
     static int player1Losses = 0;
@@ -38,7 +38,7 @@ class Program
     static int player2Losses = 0;
     static int player2Draws = 0;
 
-    
+
     // --- Game State ---
     static char[][] board = new char[Columns][]; // Stores internal chars: '_', 'X', 'O'
 
@@ -77,12 +77,12 @@ class Program
         Console.WriteLine(">> Welcome to Connect Four! <<");
         //Player names
         GetPlayerNames();
-        
+
         // NEW: Choose game mode
         ChooseGameMode();
-        
+
         ChoosePlayerChip();
-        
+
         bool playAgain = true;
         while (playAgain)
         {
@@ -123,15 +123,21 @@ class Program
                         gameEnded = true;
                         DisplayGameStatus(); // Show final board state
                         Console.Write($"\n--- ");
-                        if (currentPlayerChipChar == playerChipChar) {
+                        if (currentPlayerChipChar == playerChipChar)
+                        {
                             WriteWithColor(playerChipEmoji, playerChipColor);
-                            Console.Write($" ({player1Name}) WINS! ---");  // Player 1 wins
+                            Console.Write($" ({player1Name}) WINS! ---"); // Player 1 wins
                             playerScore++;
-                        } else {
+                        }
+                        else
+                        {
                             WriteWithColor(aiChipEmoji, aiChipColor);
-                            Console.Write(isPlayerVsPlayer ? $" ({player2Name}) WINS! ---" : " (AI) WINS! ---");  // Player 2 or AI wins
+                            Console.Write(isPlayerVsPlayer
+                                ? $" ({player2Name}) WINS! ---"
+                                : " (AI) WINS! ---"); // Player 2 or AI wins
                             aiScore++;
                         }
+
                         Console.WriteLine();
                     }
                     else if (IsBoardFull())
@@ -146,7 +152,7 @@ class Program
                     }
                 }
             } // End turn loop
-            
+
             //Adds wins,loses and draws to the respective players scores.
             if (currentPlayerChipChar == playerChipChar)
             {
@@ -172,23 +178,23 @@ class Program
                     player2Draws++;
                 }
             }
-            
+
             //Shows scoreboard
             DisplayScoreboard();
-            
-            
+
+
             //Ask for replay
             Console.Write("\nPlay again? (y/n): ");
             string response = Console.ReadLine();
             playAgain = response?.Trim().ToLower() == "y";
-            
-            
+
+
         } // End multiple games loop
-        
+
         Console.WriteLine("\nThanks for playing!");
         ResetConsoleColors(originalFg, originalBg);
     }
-    
+
     //Scoreboard of each players wins, loses and draws
     static void DisplayScoreboard()
     {
@@ -205,14 +211,17 @@ class Program
     static void ChooseGameMode()
     {
         Console.WriteLine("\nWelcome!! Here are your choices in this game which are:");
+
         Console.WriteLine("\n________________________________________________________________");
+        Console.WriteLine("|                        ----- Menu -----                      |");
+        Console.WriteLine("________________________________________________________________");
         Console.WriteLine("|             Number#            |           Options           |");
         Console.WriteLine("|_______________________________________________________________");
         Console.WriteLine("|                1               |       Player vs AI          |");
         Console.WriteLine("________________________________________________________________");
         Console.WriteLine("|                2               |       Player vs Player      |");
         Console.WriteLine("|_______________________________________________________________");
-        
+
         Console.Write("\nChoose game mode: (1) Player vs AI, (2) Player vs Player: ");
         string input = Console.ReadLine()?.Trim();
         while (input != "1" && input != "2")
@@ -220,6 +229,7 @@ class Program
             Console.Write("\nInvalid choice. Please enter 1 or 2: ");
             input = Console.ReadLine()?.Trim();
         }
+
         isPlayerVsPlayer = input == "2";
         Console.Clear(); // Clear the screen after mode selection
     }
@@ -259,12 +269,19 @@ class Program
         playerChipChar = choice;
         aiChipChar = (playerChipChar == Chip1Char) ? Chip2Char : Chip1Char;
 
-        if (playerChipChar == Chip1Char) {
-            playerChipEmoji = Player1Emoji; playerChipColor = Player1Color;
-            aiChipEmoji = Player2Emoji; aiChipColor = Player2Color;
-        } else {
-            playerChipEmoji = Player2Emoji; playerChipColor = Player2Color;
-            aiChipEmoji = Player1Emoji; aiChipColor = Player1Color;
+        if (playerChipChar == Chip1Char)
+        {
+            playerChipEmoji = Player1Emoji;
+            playerChipColor = Player1Color;
+            aiChipEmoji = Player2Emoji;
+            aiChipColor = Player2Color;
+        }
+        else
+        {
+            playerChipEmoji = Player2Emoji;
+            playerChipColor = Player2Color;
+            aiChipEmoji = Player1Emoji;
+            aiChipColor = Player1Color;
         }
 
         Console.Write($"You are ");
@@ -281,6 +298,7 @@ class Program
             WriteWithColor(aiChipEmoji, aiChipColor);
             Console.WriteLine(".");
         }
+
         Console.WriteLine("---------------------------------");
     }
 
@@ -329,13 +347,22 @@ class Program
 
         // --- Draw Static Info ---
         Console.SetCursorPosition(0, 0); // Ensure we start at the top left
-        Console.Write($"Score: Player "); WriteWithColor(playerChipEmoji, playerChipColor);
+        Console.Write($"Score: Player ");
+        WriteWithColor(playerChipEmoji, playerChipColor);
         Console.Write($"={playerScore} | ");
-        if (isPlayerVsPlayer) {
-            Console.Write("Player 2 "); WriteWithColor(aiChipEmoji, aiChipColor); Console.Write($"={aiScore}");
-        } else {
-            Console.Write("AI "); WriteWithColor(aiChipEmoji, aiChipColor); Console.Write($"={aiScore}");
+        if (isPlayerVsPlayer)
+        {
+            Console.Write("Player 2 ");
+            WriteWithColor(aiChipEmoji, aiChipColor);
+            Console.Write($"={aiScore}");
         }
+        else
+        {
+            Console.Write("AI ");
+            WriteWithColor(aiChipEmoji, aiChipColor);
+            Console.Write($"={aiScore}");
+        }
+
         Console.WriteLine();
         Console.WriteLine("-----------------------------"); // Width 29 approx
 
@@ -345,31 +372,69 @@ class Program
         // Display Cursor ('V') - Use SetCursorPosition for precise placement
 
         int cursorScreenX = 1 + cursorPosition * 4 + 1; // 1 (border) + offset + 1 (center in cell)
-         try { Console.SetCursorPosition(cursorScreenX, boardTopY); } catch {  }
+        try
+        {
+            Console.SetCursorPosition(cursorScreenX, boardTopY);
+        }
+        catch
+        {
+        }
+
         WriteWithColor("V", ConsoleColor.Green); // Draw the V
         boardTopY++; // Move down one line
 
         // Display Column Numbers - Use SetCursorPosition
-         try { Console.SetCursorPosition(0, boardTopY); } catch { /* ignore error */ }
-        Console.Write(" "); // Initial indent
-        for(int c=0; c<Columns; c++) {
-             // Center number in 4 spaces " {N} "
-             Console.Write($" {c+1}  ");
+        try
+        {
+            Console.SetCursorPosition(0, boardTopY);
         }
+        catch
+        {
+            /* ignore error */
+        }
+
+        Console.Write(" "); // Initial indent
+        for (int c = 0; c < Columns; c++)
+        {
+            // Center number in 4 spaces " {N} "
+            Console.Write($" {c + 1}  ");
+        }
+
         boardTopY++; // Move down one line
 
         // --- Draw the Grid Structure ---
         // Draw top border: +---+---+...+
-         try { Console.SetCursorPosition(0, boardTopY); } catch { /* ignore error */ }
+        try
+        {
+            Console.SetCursorPosition(0, boardTopY);
+        }
+        catch
+        {
+            /* ignore error */
+        }
+
         WriteWithColor("+", DefaultForeColor, GridFrameColor);
-        for (int c = 0; c < Columns; c++) { WriteWithColor("---", DefaultForeColor, GridFrameColor); WriteWithColor("+", DefaultForeColor, GridFrameColor); }
+        for (int c = 0; c < Columns; c++)
+        {
+            WriteWithColor("---", DefaultForeColor, GridFrameColor);
+            WriteWithColor("+", DefaultForeColor, GridFrameColor);
+        }
+
         boardTopY++; // Move down one line
 
         // Draw rows with empty slots and separators
         for (int r = Rows - 1; r >= 0; r--)
         {
             // Draw row content line (| E | E |...) E=" { } "
-             try { Console.SetCursorPosition(0, boardTopY); } catch { /* ignore error */ }
+            try
+            {
+                Console.SetCursorPosition(0, boardTopY);
+            }
+            catch
+            {
+                /* ignore error */
+            }
+
             WriteWithColor("|", DefaultForeColor, GridFrameColor); // Left edge
             for (int c = 0; c < Columns; c++)
             {
@@ -381,12 +446,26 @@ class Program
                 Console.BackgroundColor = originalBg; // Reset for separator
                 WriteWithColor("|", DefaultForeColor, GridFrameColor); // Separator
             }
+
             boardTopY++; // Move down one line
 
             // Draw Horizontal Row Separator: +---+---+...+
-             try { Console.SetCursorPosition(0, boardTopY); } catch { /* ignore error */ }
+            try
+            {
+                Console.SetCursorPosition(0, boardTopY);
+            }
+            catch
+            {
+                /* ignore error */
+            }
+
             WriteWithColor("+", DefaultForeColor, GridFrameColor);
-            for (int c = 0; c < Columns; c++) { WriteWithColor("---", DefaultForeColor, GridFrameColor); WriteWithColor("+", DefaultForeColor, GridFrameColor); }
+            for (int c = 0; c < Columns; c++)
+            {
+                WriteWithColor("---", DefaultForeColor, GridFrameColor);
+                WriteWithColor("+", DefaultForeColor, GridFrameColor);
+            }
+
             boardTopY++; // Move down one line
         }
 
@@ -404,29 +483,50 @@ class Program
                     int chipScreenX = 1 + c * 4 + 1; // 1(|) + c*4 + 1(space)
                     int chipScreenY = firstContentRowY + (Rows - 1 - r) * 2; // Each board row takes 2 screen lines
 
-                    try { // Add try-catch for safety
+                    try
+                    {
+                        // Add try-catch for safety
                         Console.SetCursorPosition(chipScreenX, chipScreenY);
-                        if (internalChip == playerChipChar) { WriteWithColor(playerChipEmoji, playerChipColor, EmptySlotBackColor); }
-                        else if (internalChip == aiChipChar) { WriteWithColor(aiChipEmoji, aiChipColor, EmptySlotBackColor); }
-                    } catch (ArgumentOutOfRangeException) { /* ignore if window too small */ }
+                        if (internalChip == playerChipChar)
+                        {
+                            WriteWithColor(playerChipEmoji, playerChipColor, EmptySlotBackColor);
+                        }
+                        else if (internalChip == aiChipChar)
+                        {
+                            WriteWithColor(aiChipEmoji, aiChipColor, EmptySlotBackColor);
+                        }
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        /* ignore if window too small */
+                    }
                 }
             }
         }
 
         // --- Display Turn Info Below Board ---
         // Ensure cursor is below the board
-         try { Console.SetCursorPosition(0, boardTopY); } catch { /* ignore error */ }
+        try
+        {
+            Console.SetCursorPosition(0, boardTopY);
+        }
+        catch
+        {
+            /* ignore error */
+        }
+
         Console.WriteLine(); // Add a blank line
 
         Console.ForegroundColor = originalFg; // Reset colors
         Console.BackgroundColor = originalBg;
-        
-        
+
+
         //Adjusted turn to say name
         Console.Write($"Turn: ");
-        if (isPlayerTurn) {
-            WriteWithColor(playerChipEmoji, playerChipColor); 
-            Console.Write($" ({player1Name})");  // Display Player 1's name
+        if (isPlayerTurn)
+        {
+            WriteWithColor(playerChipEmoji, playerChipColor);
+            Console.Write($" ({player1Name})"); // Display Player 1's name
         }
         else
         {
@@ -445,7 +545,7 @@ class Program
 
         Console.CursorVisible = true; // Restore console cursor
     }
-    
+
     /// <summary>
     /// Handles player input. Returns true if Enter or Q is pressed, false otherwise.
     /// </summary>
@@ -475,10 +575,19 @@ class Program
                 // Use the correct chip for the current player (handles PvP)
                 if (!TryDropChip(cursorPosition, chipToDrop))
                 {
-                     try { Console.SetCursorPosition(0, Console.CursorTop); } catch {/* ignore */}
+                    try
+                    {
+                        Console.SetCursorPosition(0, Console.CursorTop);
+                    }
+                    catch
+                    {
+                        /* ignore */
+                    }
+
                     Console.Write("Column full! Try again.        ");
                     Thread.Sleep(1000);
                 }
+
                 turnActionCompleted = true;
                 break;
 
@@ -517,6 +626,7 @@ class Program
             Console.WriteLine("AI Error: No valid column found? Board might be full.");
             gameEnded = true;
         }
+
         Thread.Sleep(1000);
     }
 
@@ -527,29 +637,43 @@ class Program
     static int ChooseAIColumn()
     {
         // 1. Check AI win
-        for (int c = 0; c < Columns; c++) {
-            if (CanPlace(c)) {
-                int r = FindLowestRow(c); board[c][r] = aiChipChar;
+        for (int c = 0; c < Columns; c++)
+        {
+            if (CanPlace(c))
+            {
+                int r = FindLowestRow(c);
+                board[c][r] = aiChipChar;
                 bool won = CheckWin(aiChipChar);
                 board[c][r] = EmptyChar;
                 if (won) return c;
             }
         }
+
         // 2. Check Player win block
-        for (int c = 0; c < Columns; c++) {
-            if (CanPlace(c)) {
-                int r = FindLowestRow(c); board[c][r] = playerChipChar;
+        for (int c = 0; c < Columns; c++)
+        {
+            if (CanPlace(c))
+            {
+                int r = FindLowestRow(c);
+                board[c][r] = playerChipChar;
                 bool blocked = CheckWin(playerChipChar);
                 board[c][r] = EmptyChar;
                 if (blocked) return c;
             }
         }
+
         // 3. Pick preferred
         List<int> preferred = new List<int> { 3, 4, 2, 5, 1, 6, 0 };
-        foreach (int c in preferred) { if (CanPlace(c)) return c; }
+        foreach (int c in preferred)
+        {
+            if (CanPlace(c)) return c;
+        }
 
         // 4. Pick any valid (fallback)
-        for (int c = 0; c < Columns; c++) { if (CanPlace(c)) return c; }
+        for (int c = 0; c < Columns; c++)
+        {
+            if (CanPlace(c)) return c;
+        }
 
         return -1;
     }
@@ -558,9 +682,14 @@ class Program
     /// <summary>
     /// Finds the lowest empty row (0-based) in a column, or -1 if full/invalid.
     /// </summary>
-    static int FindLowestRow(int column) {
+    static int FindLowestRow(int column)
+    {
         if (column < 0 || column >= Columns) return -1;
-        for (int r = 0; r < Rows; r++) { if (board[column][r] == EmptyChar) return r; }
+        for (int r = 0; r < Rows; r++)
+        {
+            if (board[column][r] == EmptyChar) return r;
+        }
+
         return -1;
     }
 
@@ -568,7 +697,8 @@ class Program
     /// <summary>
     /// Checks if a column is valid and not full.
     /// </summary>
-    static bool CanPlace(int column) {
+    static bool CanPlace(int column)
+    {
         return column >= 0 && column < Columns && board[column][Rows - 1] == EmptyChar;
     }
 
@@ -576,9 +706,15 @@ class Program
     /// <summary>
     /// Places internal chip char in lowest slot of column. Returns true if successful.
     /// </summary>
-    static bool TryDropChip(int column, char chipChar) {
+    static bool TryDropChip(int column, char chipChar)
+    {
         int row = FindLowestRow(column);
-        if (row != -1) { board[column][row] = chipChar; return true; }
+        if (row != -1)
+        {
+            board[column][row] = chipChar;
+            return true;
+        }
+
         return false;
     }
 
@@ -586,35 +722,48 @@ class Program
     /// <summary>
     /// Checks for 4-in-a-row for the given internal chip char.
     /// </summary>
-    static bool CheckWin(char chipChar) {
+    static bool CheckWin(char chipChar)
+    {
         // Check horizontal (left to right)
-        for (int r = 0; r < Rows; r++) {
-            for (int c = 0; c <= Columns - 4; c++) {
-                if (board[c][r] == chipChar && board[c + 1][r] == chipChar && board[c + 2][r] == chipChar && board[c + 3][r] == chipChar)
+        for (int r = 0; r < Rows; r++)
+        {
+            for (int c = 0; c <= Columns - 4; c++)
+            {
+                if (board[c][r] == chipChar && board[c + 1][r] == chipChar && board[c + 2][r] == chipChar &&
+                    board[c + 3][r] == chipChar)
                     return true;
             }
         }
 
         // Check vertical (top to bottom)
-        for (int c = 0; c < Columns; c++) {
-            for (int r = 0; r <= Rows - 4; r++) {
-                if (board[c][r] == chipChar && board[c][r + 1] == chipChar && board[c][r + 2] == chipChar && board[c][r + 3] == chipChar)
+        for (int c = 0; c < Columns; c++)
+        {
+            for (int r = 0; r <= Rows - 4; r++)
+            {
+                if (board[c][r] == chipChar && board[c][r + 1] == chipChar && board[c][r + 2] == chipChar &&
+                    board[c][r + 3] == chipChar)
                     return true;
             }
         }
 
         // Check diagonal (up-right /)
-        for (int c = 0; c <= Columns - 4; c++) {
-            for (int r = 0; r <= Rows - 4; r++) {
-                if (board[c][r] == chipChar && board[c + 1][r + 1] == chipChar && board[c + 2][r + 2] == chipChar && board[c + 3][r + 3] == chipChar)
+        for (int c = 0; c <= Columns - 4; c++)
+        {
+            for (int r = 0; r <= Rows - 4; r++)
+            {
+                if (board[c][r] == chipChar && board[c + 1][r + 1] == chipChar && board[c + 2][r + 2] == chipChar &&
+                    board[c + 3][r + 3] == chipChar)
                     return true;
             }
         }
 
         // Check diagonal (down-right \)
-        for (int c = 0; c <= Columns - 4; c++) {
-            for (int r = 3; r < Rows; r++) {
-                if (board[c][r] == chipChar && board[c + 1][r - 1] == chipChar && board[c + 2][r - 2] == chipChar && board[c + 3][r - 3] == chipChar)
+        for (int c = 0; c <= Columns - 4; c++)
+        {
+            for (int r = 3; r < Rows; r++)
+            {
+                if (board[c][r] == chipChar && board[c + 1][r - 1] == chipChar && board[c + 2][r - 2] == chipChar &&
+                    board[c + 3][r - 3] == chipChar)
                     return true;
             }
         }
@@ -626,8 +775,13 @@ class Program
     /// <summary>
     /// Checks if the board is completely full.
     /// </summary>
-    static bool IsBoardFull() {
-        for (int c = 0; c < Columns; c++) { if (board[c][Rows - 1] == EmptyChar) return false; }
+    static bool IsBoardFull()
+    {
+        for (int c = 0; c < Columns; c++)
+        {
+            if (board[c][Rows - 1] == EmptyChar) return false;
+        }
+
         return true;
     }
 
@@ -635,11 +789,12 @@ class Program
     /// <summary>
     /// Switches the turn between player and AI (or Player 2 in PvP).
     /// </summary>
-    static void SwitchPlayer() {
+    static void SwitchPlayer()
+    {
         isPlayerTurn = !isPlayerTurn;
         currentPlayerChipChar = isPlayerTurn ? playerChipChar : aiChipChar;
     }
-    
+
     /// <summary>
     /// Prompts the players to enter their names at the start of the game.
     /// </summary>
@@ -650,7 +805,7 @@ class Program
         Console.Write("\nEnter name for Player 2: ");
         player2Name = Console.ReadLine();
     }
-    
+
 
     /// <summary>
     /// Displays an animated splash screen with a simulated Connect 4 game where red wins.
@@ -668,8 +823,8 @@ class Program
 
         //Initialize board with empty spaces
         for (int r = 0; r < rows; r++)
-            for (int c = 0; c < cols; c++)
-                splashBoard[r, c] = " ";
+        for (int c = 0; c < cols; c++)
+            splashBoard[r, c] = " ";
 
         //Define the move sequence leading to red’s diagonal win
         (int col, string color)[] moves = new (int, string)[]
@@ -750,7 +905,7 @@ class Program
         }
 
         //Draw top border
-         Console.WriteLine(" +---+---+---+---+---+---+---+");
+        Console.WriteLine(" +---+---+---+---+---+---+---+");
 
         //Draw board content from top row to bottom row
         for (int r = 0; r < rows; r++)
@@ -773,9 +928,10 @@ class Program
                 Console.ResetColor();
                 Console.Write("|"); // Vertical separator / Right edge of cell
             }
+
             Console.WriteLine(); //Move to next line
             //Draw horizontal separator
-             Console.WriteLine(" +---+---+---+---+---+---+---+");
+            Console.WriteLine(" +---+---+---+---+---+---+---+");
         }
         // Bottom border is drawn by the last separator loop
 
@@ -818,7 +974,7 @@ class Program
         // Loop until Enter is pressed
         while (true)
         {
-             // Check for key press without blocking
+            // Check for key press without blocking
             if (Console.KeyAvailable)
             {
                 // Read the key - true means don't display it
@@ -833,16 +989,34 @@ class Program
 
                 // Draw ASCII Art with cycling color
                 Console.ForegroundColor = colors[colorIndex];
-                for(int i = 0; i < splashLines.Length; i++) {
-                     // Basic centering attempt for ASCII art lines
-                     int linePadding = Math.Max(0, (Console.WindowWidth - splashLines[i].Length) / 2);
-                      try { Console.SetCursorPosition(linePadding, i); } catch {/* ignore */}
-                     Console.WriteLine(splashLines[i]);
+                for (int i = 0; i < splashLines.Length; i++)
+                {
+                    // Basic centering attempt for ASCII art lines
+                    int linePadding = Math.Max(0, (Console.WindowWidth - splashLines[i].Length) / 2);
+                    try
+                    {
+                        Console.SetCursorPosition(linePadding, i);
+                    }
+                    catch
+                    {
+                        /* ignore */
+                    }
+
+                    Console.WriteLine(splashLines[i]);
                 }
+
                 Console.ResetColor();
 
                 // Draw "Press ENTER" message
-                 try { Console.SetCursorPosition(pressEnterX, pressEnterY); } catch {/* ignore */}
+                try
+                {
+                    Console.SetCursorPosition(pressEnterX, pressEnterY);
+                }
+                catch
+                {
+                    /* ignore */
+                }
+
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(pressEnterText);
                 Console.ResetColor();
@@ -857,38 +1031,5 @@ class Program
 
         Console.CursorVisible = true; // Restore cursor
         Console.Clear(); // Clear splash screen before starting game
-    }
-    
-    /// <summary>
-    /// Attempts to drop a chip into the selected column with an animated falling effect.
-    /// Returns true if the chip is successfully placed, or false if the column is full.
-    /// </summary>
-    static bool TryAnimatedDrop(string[,] currentBoard, int column, string chip)
-    {
-        int targetRow = -1;
-
-        //Scan from bottom to top to find the first available empty row in the selected column
-        for (int r = Rows - 1; r >= 0; r--)
-        {
-            if (currentBoard[column, r] == " ")
-            {
-                targetRow = r;
-                break;
-            }
-        }
-
-        //If no space was found in the column, return false (column is full)
-        if (targetRow == -1) return false;
-
-        //Animate the chip falling step by step from top to the target row
-        for (int r = 0; r <= targetRow; r++)
-        {
-            if (r > 0) currentBoard[column, r - 1] = " ";//Clear previous temporary chip position
-            currentBoard[column, r] = chip;//Place chip at current position of the drop
-            DrawBoard(currentBoard);//Redraw the board to show the falling animation
-            Thread.Sleep(80);//Short delay to simulate animation timing
-        }
-
-        return true;//Return true to indicate the chip was successfully dropped
     }
 }
