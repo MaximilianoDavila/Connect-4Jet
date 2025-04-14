@@ -204,11 +204,20 @@ class Program
     /// </summary>
     static void ChooseGameMode()
     {
-        Console.Write("Choose game mode: (1) Player vs AI, (2) Player vs Player: ");
+        Console.WriteLine("\nWelcome!! Here are your choices in this game which are:");
+        Console.WriteLine("\n________________________________________________________________");
+        Console.WriteLine("|             Number#            |           Options           |");
+        Console.WriteLine("|_______________________________________________________________");
+        Console.WriteLine("|                1               |       Player vs AI          |");
+        Console.WriteLine("________________________________________________________________");
+        Console.WriteLine("|                2               |       Player vs Player      |");
+        Console.WriteLine("|_______________________________________________________________");
+        
+        Console.Write("\nChoose game mode: (1) Player vs AI, (2) Player vs Player: ");
         string input = Console.ReadLine()?.Trim();
         while (input != "1" && input != "2")
         {
-            Console.Write("Invalid choice. Please enter 1 or 2: ");
+            Console.Write("\nInvalid choice. Please enter 1 or 2: ");
             input = Console.ReadLine()?.Trim();
         }
         isPlayerVsPlayer = input == "2";
@@ -636,9 +645,9 @@ class Program
     /// </summary>
     static void GetPlayerNames()
     {
-        Console.Write("Enter name for Player 1: ");
+        Console.Write("\nEnter name for Player 1: ");
         player1Name = Console.ReadLine();
-        Console.Write("Enter name for Player 2: ");
+        Console.Write("\nEnter name for Player 2: ");
         player2Name = Console.ReadLine();
     }
     
@@ -848,5 +857,38 @@ class Program
 
         Console.CursorVisible = true; // Restore cursor
         Console.Clear(); // Clear splash screen before starting game
+    }
+    
+    /// <summary>
+    /// Attempts to drop a chip into the selected column with an animated falling effect.
+    /// Returns true if the chip is successfully placed, or false if the column is full.
+    /// </summary>
+    static bool TryAnimatedDrop(string[,] currentBoard, int column, string chip)
+    {
+        int targetRow = -1;
+
+        //Scan from bottom to top to find the first available empty row in the selected column
+        for (int r = Rows - 1; r >= 0; r--)
+        {
+            if (currentBoard[column, r] == " ")
+            {
+                targetRow = r;
+                break;
+            }
+        }
+
+        //If no space was found in the column, return false (column is full)
+        if (targetRow == -1) return false;
+
+        //Animate the chip falling step by step from top to the target row
+        for (int r = 0; r <= targetRow; r++)
+        {
+            if (r > 0) currentBoard[column, r - 1] = " ";//Clear previous temporary chip position
+            currentBoard[column, r] = chip;//Place chip at current position of the drop
+            DrawBoard(currentBoard);//Redraw the board to show the falling animation
+            Thread.Sleep(80);//Short delay to simulate animation timing
+        }
+
+        return true;//Return true to indicate the chip was successfully dropped
     }
 }
